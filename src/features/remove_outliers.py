@@ -21,10 +21,11 @@ plt.rcParams["figure.dpi"] = 100
 
 df[["gyr_y", "label"]].boxplot(by="label", figsize=(20, 10))
 
+# this plots the boxplot for the accelerometer and gyroscope data, grouped by label
 df[outlier_columns[:3] + ["label"]].boxplot(by="label", figsize=(20, 10), layout=(1, 3))
 df[outlier_columns[3:] + ["label"]].boxplot(by="label", figsize=(20, 10), layout=(1, 3))
 
-
+# Taken from: https://github.com/mhoogen/ML4QS/blob/master/Python3Code/util/VisualizeDataset.py
 def plot_binary_outliers(dataset, col, outlier_col, reset_index):
     """Plot outliers in case of a binary outlier score. Here, the col specifies the real data
     column and outlier_col the columns with a binary value (outlier or not).
@@ -36,7 +37,7 @@ def plot_binary_outliers(dataset, col, outlier_col, reset_index):
         reset_index (bool): whether to reset the index for plotting
     """
 
-    # Taken from: https://github.com/mhoogen/ML4QS/blob/master/Python3Code/util/VisualizeDataset.py
+    
 
     dataset = dataset.dropna(axis=0, subset=[col, outlier_col])
     dataset[outlier_col] = dataset[outlier_col].astype("bool")
@@ -63,7 +64,7 @@ def plot_binary_outliers(dataset, col, outlier_col, reset_index):
     )
 
     plt.legend(
-        ["outlier " + col, "no outlier " + col],
+        ["no outlier " + col, "outlier " + col],
         loc="upper center",
         ncol=2,
         fancybox=True,
@@ -133,13 +134,14 @@ df[outlier_columns[3:] + ["label"]].plot.hist(
     by="label", figsize=(20, 20), layout=(3, 3)
 )
 
+# Taken from: https://github.com/mhoogen/ML4QS/blob/master/Python3Code/Chapter3/OutlierDetection.py
 
 # Insert Chauvenet's function
 def mark_outliers_chauvenet(dataset, col, C=2):
     """Finds outliers in the specified column of datatable and adds a binary column with
     the same name extended with '_outlier' that expresses the result per data point.
 
-    Taken from: https://github.com/mhoogen/ML4QS/blob/master/Python3Code/Chapter3/OutlierDetection.py
+    
 
     Args:
         dataset (pd.DataFrame): The dataset
@@ -172,7 +174,8 @@ def mark_outliers_chauvenet(dataset, col, C=2):
     for i in range(0, len(dataset.index)):
         # Determine the probability of observing the point
         prob.append(
-            1.0 - 0.5 * (scipy.special.erf(high[i]) - scipy.special.erf(low[i]))
+            # 1.0 - 0.5 * (scipy.special.erf(high[i]) - scipy.special.erf(low[i]))
+            1.0 - 0.5 * (scipy.special.erf(high.iloc[i]) - scipy.special.erf(low.iloc[i]))
         )
         # And mark as an outlier when the probability is below our criterion.
         mask.append(prob[i] < criterion)
@@ -214,7 +217,7 @@ def mark_outliers_lof(dataset, columns, n=20):
     X_scores = lof.negative_outlier_factor_
 
     dataset["outlier_lof"] = outliers == -1
-    return dataset, outliers, X_scores
+    return dataset, outliers, X_scores # X_score (LOF score) expresses the "certainty" or "strength" of being an outlier
 
 
 # Loop over all columns
@@ -252,7 +255,7 @@ for col in outlier_columns:
 col = "gyr_z"
 dataset = mark_outliers_chauvenet(df, col=col)
 dataset[dataset["gyr_z_outlier"]]
-dataset.loc[dataset["gyr_z_outlier"], "gyr_z"] = np.nan
+dataset.loc[dataset["gyr_z_outlier"], "gyr_z"] = np.nan # replace all the values in gyr_z column which are marked as outlier in gyr_z_outlier column with nan
 
 # Create a loop
 outliers_removed_df = df.copy()

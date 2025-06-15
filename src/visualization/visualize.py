@@ -38,7 +38,8 @@ for label in df["label"].unique():
 # --------------------------------------------------------------
 mpl.style.use("seaborn-v0_8-deep")
 mpl.rcParams["figure.figsize"] = (20, 5)
-mpl.rcParams["figure.dpi"] = 100
+mpl.rcParams["figure.dpi"] = 100 # when we export our figures they have a right resolution
+
 # --------------------------------------------------------------
 # Compare medium vs. heavy sets
 # --------------------------------------------------------------
@@ -48,7 +49,8 @@ fig, ax = plt.subplots()
 category_df.groupby(["category"])["acc_y"].plot()
 ax.set_ylabel("acc_y")
 ax.set_xlabel("samples")
-plt.legend()
+plt.legend() 
+#the plot shows the difference between medium and heavy sets for the squat exercise for participant A
 
 # --------------------------------------------------------------
 # Compare participants
@@ -75,6 +77,8 @@ fig, ax = plt.subplots()
 all_axis_df[["acc_x", "acc_y", "acc_z"]].plot(ax=ax)
 ax.set_xlabel("samples")
 plt.legend()
+# this plots the accelerometer data in x, y and z axis for the squat exercise of participant A
+
 # --------------------------------------------------------------
 # Create a loop to plot all combinations per sensor
 # --------------------------------------------------------------
@@ -135,9 +139,11 @@ ax[1].legend(
     loc="upper center", bbox_to_anchor=(0.5, 1.15), ncol=3, fancybox=True, shadow=True
 )
 ax[1].set_xlabel("samples")
+
 # --------------------------------------------------------------
 # Loop over all combinations and export for both sensors
 # --------------------------------------------------------------
+
 labels = df["label"].unique()
 participants = df["participant"].unique()
 for label in labels:
@@ -167,5 +173,5 @@ for label in labels:
                 shadow=True,
             )
             ax[1].set_xlabel("samples")
-            plt.savefig(f"../../reports/figures/{label.title()} ({participant}).png")
+            #plt.savefig(f"../../reports/figures/{label.title()} ({participant}).png")
             plt.show()
