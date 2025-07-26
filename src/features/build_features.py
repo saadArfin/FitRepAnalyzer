@@ -44,8 +44,10 @@ for s in df["set"].unique():
 
 duration_df = df.groupby(["category"])["duration"].mean()
 
-duration_df.iloc[0] / 5
-duration_df.iloc[1] / 10
+duration_df.iloc[0] / 5 # denotes average duration of a rep of heavy set (2.948 sec)
+duration_df.iloc[1] / 10 # denotes average duration of a rep of medium set (2.494 sec)
+
+
 # --------------------------------------------------------------
 # Butterworth lowpass filter
 # --------------------------------------------------------------
@@ -84,7 +86,7 @@ plt.xlabel("principal component number")
 plt.ylabel("explained variance")
 plt.show()
 
-df_pca = PCA.apply_pca(df_pca, predictor_columns, 3)
+df_pca = PCA.apply_pca(df_pca, predictor_columns, 3) # 3 is determined by the above elbow method (look at the figure)
 
 subset = df_pca[df_pca["set"] == 35]
 subset[["pca_1", "pca_2", "pca_3"]].plot()
@@ -142,7 +144,7 @@ df_freq = df_temporal.copy().reset_index()
 FreqAbs = FourierTransformation()
 
 fs = int(1000 / 200)
-ws = int(2800 / 200)
+ws = int(2800 / 200) # 2.8 sec denotes average duration of a rep
 
 df_freq = FreqAbs.abstract_frequency(df_freq, ["acc_y"], ws, fs)
 
