@@ -3,8 +3,8 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 from LearningAlgorithms import ClassificationAlgorithms
-
-# import seaborn as sns
+from sklearn.utils import shuffle
+import seaborn as sns
 import itertools
 from sklearn.metrics import accuracy_score, confusion_matrix
 
@@ -71,16 +71,26 @@ selected_features, ordered_features, ordered_scores = learner.forward_selection(
 )
 
 selected_features = {
-    "acc_z_freq_0.0_Hz_ws_14",
-    "acc_x_freq_0.0_Hz_ws_14",
-    "duration",
-    "gyr_r_temp_mean_ws_5",
-    "acc_y_max_freq",
-    "gyr_z_pse",
-    "acc_x_freq_0.357_Hz_ws_14",
-    "acc_y_freq_1.429_Hz_ws_14",
-    "acc_x",
-    "acc_x_freq_1.071_Hz_ws_14",
+    # "acc_z_freq_0.0_Hz_ws_14",
+    # "acc_x_freq_0.0_Hz_ws_14",
+    # "duration",
+    # "gyr_r_temp_mean_ws_5",
+    # "acc_y_max_freq",
+    # "gyr_z_pse",
+    # "acc_x_freq_0.357_Hz_ws_14",
+    # "acc_y_freq_1.429_Hz_ws_14",
+    # "acc_x",
+    # "acc_x_freq_1.071_Hz_ws_14",
+    'acc_z_freq_0.0_Hz_ws_14',
+    'acc_x_freq_0.0_Hz_ws_14',
+    'duration',
+    'gyr_r_temp_mean_ws_5',
+    'acc_y_max_freq',
+    'gyr_z_pse',
+    'acc_y_freq_0.714_Hz_ws_14',
+    'gyr_x_freq_2.5_Hz_ws_14',
+    'gyr_x_freq_0.0_Hz_ws_14',
+    'acc_x_max_freq'
 }
 
 plt.figure(figsize=(10, 5))
@@ -205,13 +215,13 @@ for i, f in zip(range(len(possible_feature_sets)), feature_names):
 # --------------------------------------------------------------
 score_df.sort_values(by="accuracy", ascending=False)
 
-# plt.figure(figsize=(10, 10))
-# sns.barplot(x="model", y="accuracy", hue="feature_set", data=score_df)
-# plt.xlabel("Model")
-# plt.ylabel("Accuracy")
-# plt.ylim(0.7, 1)
-# plt.legend(loc="lower right")
-# plt.show()
+plt.figure(figsize=(10, 10))
+sns.barplot(x="model", y="accuracy", hue="feature_set", data=score_df)
+plt.xlabel("Model")
+plt.ylabel("Accuracy")
+plt.ylim(0.7, 1)
+plt.legend(loc="lower right")
+plt.show()
 
 
 # --------------------------------------------------------------
@@ -266,6 +276,9 @@ y_test = participant_df[participant_df["participant"] == "A"]["label"]
 
 X_train = X_train.drop(["participant"], axis=1)
 X_test = X_test.drop(["participant"], axis=1)
+
+# Shuffle training data
+X_train, y_train = shuffle(X_train, y_train, random_state=42)
 
 fig, ax = plt.subplots(figsize=(10, 5))
 df_train["label"].value_counts().plot(
@@ -324,7 +337,7 @@ plt.show()
     class_train_prob_y,
     class_test_prob_y,
 ) = learner.feedforward_neural_network(
-    X_train[selected_features], y_train, X_test[selected_features], gridsearch=False
+    X_train[feature_set_4], y_train, X_test[feature_set_4], gridsearch=True
 )
 
 accuracy = accuracy_score(y_test, class_test_y)
@@ -336,7 +349,7 @@ cm = confusion_matrix(y_test, class_test_y, labels=classes)
 plt.figure(figsize=(10, 10))
 plt.imshow(cm, interpolation="nearest", cmap=plt.cm.Blues)
 plt.title("Confusion matrix")
-plt.colorbar()
+plt.colorbar() 
 tick_marks = np.arange(len(classes))
 plt.xticks(tick_marks, classes, rotation=45)
 plt.yticks(tick_marks, classes)
