@@ -131,7 +131,3 @@ src/
 - Automated repetition counting provides reliable exercise metrics for training analysis.
 
 ---
-
-## Author
-
-*This project was developed for sensor-based exercise recognition and benchmarking using modern machine learning and signal processing
