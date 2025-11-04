@@ -129,5 +129,4 @@ src/
 - Random Forest and Neural Network models achieve high classification performance.
 - Participant-based evaluation demonstrates model generalization to new users.
 - Automated repetition counting provides reliable exercise metrics for training analysis.
-
 ---
